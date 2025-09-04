@@ -1,6 +1,4 @@
 import sqlite3 from 'sqlite3';
-import { promisify } from 'util';
-import { Task, SyncQueueItem } from '../types';
 
 const sqlite = sqlite3.verbose();
 
@@ -49,7 +47,7 @@ export class Database {
   }
 
   // Helper methods
-  run(sql: string, params: any[] = []): Promise<void> {
+  run(sql: string, params: unknown[] = []): Promise<void> {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, (err) => {
         if (err) reject(err);
@@ -58,18 +56,18 @@ export class Database {
     });
   }
 
-  get(sql: string, params: any[] = []): Promise<any> {
+  get<T>(sql: string, params: unknown[] = []): Promise<T | undefined> {
     return new Promise((resolve, reject) => {
-      this.db.get(sql, params, (err, row) => {
+      this.db.get(sql, params, (err, row: T) => {
         if (err) reject(err);
         else resolve(row);
       });
     });
   }
 
-  all(sql: string, params: any[] = []): Promise<any[]> {
+  all<T>(sql: string, params: unknown[] = []): Promise<T[]> {
     return new Promise((resolve, reject) => {
-      this.db.all(sql, params, (err, rows) => {
+      this.db.all(sql, params, (err, rows: T[]) => {
         if (err) reject(err);
         else resolve(rows);
       });

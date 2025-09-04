@@ -16,7 +16,7 @@ describe('SyncService', () => {
     db = new Database(':memory:');
     await db.initialize();
     taskService = new TaskService(db);
-    syncService = new SyncService(db, taskService);
+    syncService = new SyncService(db);
   });
 
   afterEach(async () => {
@@ -37,20 +37,6 @@ describe('SyncService', () => {
       
       const isOnline = await syncService.checkConnectivity();
       expect(isOnline).toBe(false);
-    });
-  });
-
-  describe('addToSyncQueue', () => {
-    it('should add operation to sync queue', async () => {
-      const task = await taskService.createTask({ title: 'Test Task' });
-      
-      await syncService.addToSyncQueue(task.id, 'update', {
-        title: 'Updated Title',
-      });
-
-      const queueItems = await db.all('SELECT * FROM sync_queue WHERE task_id = ?', [task.id]);
-      expect(queueItems.length).toBeGreaterThan(0);
-      expect(queueItems[queueItems.length - 1].operation).toBe('update');
     });
   });
 

@@ -54,3 +54,16 @@ export interface BatchSyncResponse {
     error?: string;
   }[];
 }
+
+export interface RawTask {
+  id: string;
+  title: string;
+  description?: string;
+  completed: number;
+  created_at: string;
+  updated_at: string;
+  is_deleted: number;
+  sync_status?: 'pending' | 'synced' | 'error';
+  server_id?: string;
+  last_synced_at?: string;
+}
